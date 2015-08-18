@@ -85,7 +85,9 @@ void loop()
 
 
 void rfstart(NewRemoteCode receivedCode) {
+ interrupts();
 
+ 
   if (receivedCode.address == 22 && receivedCode.unit == 1 && receivedCode.switchType == 2) //Unit 22, ID 2, DIM 0-15
     {
       lcd.clear();
@@ -102,6 +104,7 @@ lcd.setCursor(4, 1);
   lcd.print("C");
   NewRemoteReceiver::enable();
 }
+
 if (receivedCode.address == 22 && receivedCode.unit == 2 && receivedCode.switchType == 2) //Unit 22, ID 2, DIM 0-15*2
     {
       lcd.clear();
@@ -109,19 +112,21 @@ if (receivedCode.address == 22 && receivedCode.unit == 2 && receivedCode.switchT
       Temp = receivedCode.dimLevel * 2;
     // Disable the receiver
     NewRemoteReceiver::disable();
+      lcd.setCursor(2, 0);
+      lcd.print("Water temp.");
 lcd.setCursor(4, 1);
   lcd.write(1);
-  lcd.setCursor(5, 1);
+  lcd.setCursor(6, 1);
   lcd.print(Temp);
-  lcd.setCursor(7, 1);
+  lcd.setCursor(8, 1);
   lcd.print((char)223); //degree sign
   lcd.print("C");
   NewRemoteReceiver::enable();
 }
-if (receivedCode.address == 22 && receivedCode.unit == 2 && receivedCode.switchType == 0) //Unit 22, ID 2, OFF
-    {
-      NewRemoteReceiver::disable();
-lcd.clear();
+
+if (receivedCode.address == 22 && receivedCode.unit == 3 && receivedCode.switchType == 1) //Unit 22, ID 2, OFF
+ {
+   lcd.clear();
   lcd.setBacklight(HIGH);
       lcd.setCursor(0, 0);
       lcd.print("Night mode");
@@ -138,8 +143,9 @@ lcd.clear();
       lcd.write(4);
       delay (10000);
       lcd.setBacklight(LOW);
-      NewRemoteReceiver::enable();
-    }
+  }
+    
+  
 }
 void shutdown(int times) //loading bar
 {
