@@ -1,15 +1,15 @@
-/* Demonstration sketch for PCF8574T I2C LCD Backpack 
-Uses library from https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads GNU General Public License, version 3 (GPL-3.0) */
+/* Arduino-RF-15x2-LCD 
+ *  A simple sketch for my aquarium temperature https://github.com/incmve/Arduino-RF-15x2-LCD
+Uses library from https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads or https://github.com/pkourany/LiquidCrystal_V1.2.1 GNU General Public License, version 3 (GPL-3.0) */
 #include <Wire.h>
 #include <LCD.h>
 #include <LiquidCrystal_I2C.h>
 #include <NewRemoteReceiver.h>
  
-LiquidCrystal_I2C  lcd(0x27,2,1,0,4,5,6,7); // 0x27 is the I2C bus address for an unmodified backpack
-
+LiquidCrystal_I2C  lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); // I2c 0x27 or 0x20
 //variables
 int Temp;
-char bar = 'O';
+
 
 // create characters
  byte termometru[8] = //icon for termometer
@@ -48,7 +48,7 @@ byte barchar[8] = //icon for bar
     B11111
 };
 
-byte smiley[8] = //icon for bar
+byte smiley[8] = //icon for Smiley
 {
   B00000,
   B10001,
@@ -65,8 +65,8 @@ void setup()
    NewRemoteReceiver::init(0, 2, rfstart);
   // activate LCD module
   lcd.begin (16,2); // for 16 x 2 LCD module
-  lcd.clear();
-  lcd.setBacklightPin(3,POSITIVE);
+  lcd.clear(); // clear LCD
+//  lcd.setBacklightPin(3,POSITIVE); //TEST
   lcd.setBacklight(HIGH);
  lcd.createChar(1,termometru);
  lcd.createChar(2,picatura);
@@ -74,7 +74,7 @@ void setup()
  lcd.createChar(4,smiley);
  lcd.setCursor(0, 0);
  lcd.print("Booting..");
- shutdown(bar,16);
+ shutdown(16);
  lcd.setBacklight(LOW);
 }
  
@@ -125,12 +125,12 @@ lcd.clear();
   lcd.setBacklight(HIGH);
       lcd.setCursor(0, 0);
       lcd.print("Night mode");
-  shutdown(bar,16);
+  shutdown(16);
   lcd.clear();
   lcd.setCursor(0, 0);
       lcd.print("Switching on air");
   lcd.setCursor(0, 1); 
-  air(bar,16);
+  air(16);
       lcd.clear();
       lcd.setCursor(6, 0);
       lcd.print("BYE");
@@ -141,7 +141,7 @@ lcd.clear();
       NewRemoteReceiver::enable();
     }
 }
-void shutdown(int led, int times) //Unit 66 ID 7 Off Blink
+void shutdown(int times) //loading bar
 {
   lcd.setCursor(0, 1);
  for (int i=0; i< times; i++)
@@ -150,7 +150,7 @@ void shutdown(int led, int times) //Unit 66 ID 7 Off Blink
   delay (1000);
  }
 }
-void air(int led, int times) //Unit 66 ID 7 Off Blink
+void air(int times) //Loading bar
 {
   lcd.setCursor(0, 1);
  for (int i=0; i< times; i++)
